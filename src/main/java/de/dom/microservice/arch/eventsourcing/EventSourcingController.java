@@ -49,9 +49,8 @@ public class EventSourcingController {
         try {
             return aClass.getConstructor().newInstance();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new AggregateCreateException();
         }
-        return null;
     }
 
 
