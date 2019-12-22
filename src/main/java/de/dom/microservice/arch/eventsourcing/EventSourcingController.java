@@ -48,13 +48,7 @@ public class EventSourcingController {
         Class<T> aClass = this.aggregates.get(aggregate.eventGroup());
         try {
             return aClass.getConstructor().newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
