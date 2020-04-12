@@ -2,6 +2,8 @@ package de.dom.microservice.arch.eventsourcing.event;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.dom.microservice.arch.ddd.AggregateObjectMapper;
+import de.dom.microservice.arch.eventsourcing.aggregates.Aggregates;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,16 +15,32 @@ public abstract class AbstractDomainEvent {
     @JsonIgnore
     private String uniqueEventIdentifier;
 
-    private String reference;
+    protected String reference;
 
     private String user;
     private LocalDateTime created = LocalDateTime.now();
 
     public abstract String getEventGroup();
 
+    public String getEvent() {
+        return Aggregates.eventToName(getClass());
+    }
+
     public AbstractDomainEvent() {
-        String time =LocalDateTime.now().toString();
+        String time = LocalDateTime.now().toString();
         String id = UUID.randomUUID().toString();
-        this. uniqueEventIdentifier = String.format("%s-%s" , id , time);
+        this.uniqueEventIdentifier = String.format("%s-%s", id, time);
+    }
+
+    public String payload() {
+        return AggregateObjectMapper.eventToJson(this).orElse("{}");
+    }
+
+    public String getUniqueEventIdentifier() {
+        return uniqueEventIdentifier;
+    }
+
+    public String getReference() {
+        return reference;
     }
 }

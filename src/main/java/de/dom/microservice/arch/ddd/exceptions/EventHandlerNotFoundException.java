@@ -9,6 +9,6 @@ public class EventHandlerNotFoundException extends RuntimeException {
     }
 
     public EventHandlerNotFoundException(AbstractDomainEvent e) {
-        super( String.format("No event handler found for event %s" , e.getClass().getSimpleName() ) );
+        super(String.format("No event handler found for event %s", e.getClass().getSimpleName()));
     }
 }

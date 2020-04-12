@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.Optional;
 
-@Slf4j
 public class AggregateObjectMapper extends ObjectMapper {
 
     private AggregateObjectMapper() {
@@ -23,7 +22,7 @@ public class AggregateObjectMapper extends ObjectMapper {
         this.registerModule(new JavaTimeModule());
     }
 
-    public static String objectToString( Object obj ){
+    public static String objectToString(Object obj) {
         try {
             return new AggregateObjectMapper().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
@@ -32,11 +31,11 @@ public class AggregateObjectMapper extends ObjectMapper {
         }
     }
 
-    public static <T extends AggregateRoot> Optional<String> toJson(T agg ){
+    public static <T extends AggregateRoot> Optional<String> toJson(T agg) {
         return AggregateObjectMapper.toJsonString(agg);
     }
 
-    public static <T extends AggregateRoot> Optional<T> fromJson(String json , Class<T> clazz){
+    public static <T extends AggregateRoot> Optional<T> fromJson(String json, Class<T> clazz) {
         T aggregate = null;
         try {
             aggregate = new AggregateObjectMapper().readValue(json, clazz);
@@ -46,23 +45,32 @@ public class AggregateObjectMapper extends ObjectMapper {
         return Optional.ofNullable(aggregate);
     }
 
-    public static <T extends AbstractDomainEvent> Optional<String> eventToJson(T event ){
+    public static <T extends AbstractDomainEvent> Optional<String> eventToJson(T event) {
         return AggregateObjectMapper.toJsonString(event);
     }
 
-    public static <T extends AbstractDomainEvent> Optional<T> toEvent( String json , Class<T> clazz ){
+    public static <T extends AbstractDomainEvent> Optional<T> toEvent(String json, Class<T> clazz) {
         try {
-            return Optional.of( new AggregateObjectMapper().readValue( json , clazz ) );
+            return Optional.of(new AggregateObjectMapper().readValue(json, clazz));
         } catch (IOException e) {
             //log.error(e.getMessage(),e);
             return Optional.empty();
         }
     }
 
-    private static <T> Optional<String>  toJsonString( T t ){
-        try{
-            return Optional.of(new AggregateObjectMapper().writeValueAsString( t ));
-        }catch(Exception e){
+    public static Optional<AbstractDomainEvent> toAbstractEvent(String json, Class<AbstractDomainEvent> clazz) {
+        try {
+            return Optional.of(new AggregateObjectMapper().readValue(json, clazz));
+        } catch (IOException e) {
+            //log.error(e.getMessage(),e);
+            return Optional.empty();
+        }
+    }
+
+    private static <T> Optional<String> toJsonString(T t) {
+        try {
+            return Optional.of(new AggregateObjectMapper().writeValueAsString(t));
+        } catch (Exception e) {
             //log.error(e.getMessage(),e);
             return Optional.empty();
         }

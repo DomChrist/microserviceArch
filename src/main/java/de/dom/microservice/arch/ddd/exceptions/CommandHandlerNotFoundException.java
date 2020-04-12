@@ -9,6 +9,6 @@ public class CommandHandlerNotFoundException extends RuntimeException {
     }
 
     public CommandHandlerNotFoundException(AbstractDomainEvent e) {
-        super( String.format("No command handler found for command %s" , e.getClass().getSimpleName() ) );
+        super(String.format("No command handler found for command %s", e.getClass().getSimpleName()));
     }
 }
