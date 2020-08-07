@@ -7,6 +7,7 @@ import de.dom.microservice.arch.eventsourcing.aggregates.Aggregates;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -33,7 +34,8 @@ public abstract class AbstractDomainEvent {
     }
 
     public String payload() {
-        return AggregateObjectMapper.eventToJson(this).orElse("{}");
+        Optional<String> json = AggregateObjectMapper.eventToJson(this);
+        return json.orElse("{}");
     }
 
     public String getUniqueEventIdentifier() {

@@ -61,6 +61,8 @@ public class EventStoreEntity implements EventEntityInterface {
         entity.setSequence(sequence);
         entity.setPayload(event.payload());
         entity.setVersion(1);
+        entity.setCreator( event.getUser() );
+        entity.setCreated(event.getCreated());
         return entity;
     }
 
@@ -74,6 +76,8 @@ public class EventStoreEntity implements EventEntityInterface {
         entity.setSequence(sequence);
         entity.setPayload(payload);
         entity.setVersion(1);
+        entity.setCreator( event.getUser() );
+        entity.setCreated(event.getCreated());
         return entity;
     }
 

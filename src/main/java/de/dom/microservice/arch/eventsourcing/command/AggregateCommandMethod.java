@@ -43,6 +43,10 @@ public class AggregateCommandMethod {
         return method != null;
     }
 
+    public boolean isConstructor() {
+        return constructor != null;
+    }
+
     public Object construct(AbstractDomainCommand cmd) {
         try {
             return this.constructor.newInstance(cmd);
