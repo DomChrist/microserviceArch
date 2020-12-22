@@ -6,7 +6,6 @@ import de.dom.microservice.arch.eventsourcing.gateways.QueryGateway;
 public class TestCommandGateway extends CommandGateway {
 
     public TestCommandGateway(QueryGateway queryGateway) {
-        CommandGateway.setCommandGateway(this);
         CommandGateway.setQueryGateway(queryGateway);
     }
 

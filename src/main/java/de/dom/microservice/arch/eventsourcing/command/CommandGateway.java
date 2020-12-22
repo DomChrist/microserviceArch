@@ -17,26 +17,22 @@ public abstract class CommandGateway extends CommandGatewayScope {
 
     public static <T extends AbstractDomainCommand> void send(T command){
         try{
-            getInstance().sendCommand(command);
+            sendCommand(command);
         } catch (Throwable throwable) {
             throw new IllegalArgumentException(throwable);
         }
     }
 
-    private static CommandGateway getInstance(){
-        return commandGateway;
-    }
-
-    protected <T extends AbstractDomainCommand> void sendCommand( T cmd ) throws Throwable {
-        Optional<AggregateCommandMethod> method = commands.stream().filter(e -> e.isCommandHandler(cmd.getClass())).findFirst();
+    protected static <T extends AbstractDomainCommand> void sendCommand( T cmd ) throws Throwable {
+        Optional<AggregateCommandMethod> method = command(cmd.getClass());
         AggregateCommandMethod aggregateCommandMethod = method.orElseThrow(()->new IllegalArgumentException(String.format("no handler for %s",cmd.getClass().getName())));
 
-        this.invoke( aggregateCommandMethod , cmd );
+        invoke( aggregateCommandMethod , cmd );
 
     }
 
 
-    private <T extends AbstractDomainCommand> void invoke( AggregateCommandMethod m , T cmd ) throws Throwable {
+    private static <T extends AbstractDomainCommand> void invoke( AggregateCommandMethod m , T cmd ) throws Throwable {
 
         if( StringUtils.isBlank( cmd.getReference() ) ) throw new IllegalArgumentException("reference is null");
 
@@ -44,8 +40,10 @@ public abstract class CommandGateway extends CommandGatewayScope {
 
         if( aggregate.isEmpty() && m.isConstructor() ){
             m.construct( cmd );
+            return;
         } else if( aggregate.isPresent() && m.isMethod() ){
             m.invoke( aggregate.get() , cmd );
+            return;
         }
         throw new NoSuchMethodError("Mehtod is not executable");
     }

@@ -15,6 +15,11 @@ public abstract class QueryGateway {
 
     protected static EventBus eventBus;
 
+    public static void init( EventBus bus ){
+        QueryGateway.eventBus = bus;
+    }
+
+
     public static <T> Optional<T> aggregate(String reference, Class<T> clazz ){
         EventBusResult read = eventBus.read(reference, clazz);
         if(read.isEmpty() ) return Optional.empty();
