@@ -1,6 +1,7 @@
 package de.dom.microservice.arch.ddd.exceptions;
 
-import de.dom.microservice.arch.eventsourcing.event.AbstractDomainEvent;
+
+import de.dom.microservice.arch.eventsourcing.events.AbstractDomainEvent;
 
 public class EventHandlerNotFoundException extends RuntimeException {
 

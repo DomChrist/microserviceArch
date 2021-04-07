@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.dom.microservice.arch.ddd.annotations.AggregateRoot;
-import de.dom.microservice.arch.eventsourcing.event.AbstractDomainEvent;
-import lombok.extern.slf4j.Slf4j;
+import de.dom.microservice.arch.eventsourcing.events.AbstractDomainEvent;
+import de.dom.microservice.arch.eventsourcing.exceptions.EventParsingError;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class AggregateObjectMapper extends ObjectMapper {
         }
     }
 
-    public static <T extends AggregateRoot> Optional<String> toJson(T agg) {
+    public static Optional<String> toJson(Object agg) {
         return AggregateObjectMapper.toJsonString(agg);
     }
 
@@ -73,6 +73,16 @@ public class AggregateObjectMapper extends ObjectMapper {
         } catch (Exception e) {
             //log.error(e.getMessage(),e);
             return Optional.empty();
+        }
+    }
+
+    public static void isEventParsingPossible( AbstractDomainEvent event ){
+        AggregateObjectMapper objectMapper = new AggregateObjectMapper();
+        try {
+            String json = objectMapper.writeValueAsString(event);
+            AbstractDomainEvent domainEvent = objectMapper.readValue(json, event.getClass());
+        } catch (JsonProcessingException e) {
+            throw new EventParsingError(event.getClass(),e);
         }
     }
 

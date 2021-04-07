@@ -1,7 +1,6 @@
 package de.dom.microservice.arch.ddd;
 
-import de.dom.microservice.arch.eventsourcing.command.AbstractDomainCommand;
-import de.dom.microservice.arch.eventsourcing.event.AbstractDomainEvent;
+import de.dom.microservice.arch.eventsourcing.events.AbstractDomainEvent;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +21,6 @@ public class AggregateInspector {
         return Arrays.stream(aggregate.getDeclaredMethods())
                 .filter(c -> Modifier.isPublic(c.getModifiers()))
                 .filter(c -> c.getParameterCount() == 1)
-                .filter(c -> AbstractDomainCommand.class.isAssignableFrom(c.getParameterTypes()[0]))
                 .collect(Collectors.toSet());
     }
 
@@ -30,7 +28,6 @@ public class AggregateInspector {
         return Arrays.stream(aggregate.getDeclaredConstructors())
                 .filter(c -> Modifier.isPublic(c.getModifiers()))
                 .filter(c -> c.getParameterCount() == 1)
-                .filter(c -> AbstractDomainCommand.class.isAssignableFrom(c.getParameterTypes()[0]))
                 .collect(Collectors.toSet());
     }
 
